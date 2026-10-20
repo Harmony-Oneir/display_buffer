@@ -1,0 +1,109 @@
+# oneir: Display Buffer VDI (аллокатор буферов для Display HDI).
+# За основу взята реализация QEMU virt_full (dumb buffers через hi_gbm),
+# жёсткий "/dev/dri/card0" заменён на OneirOpenDrmDevice().
+#
+# Сборка из корня дерева:  ./oneir/make.sh //oneir/display_buffer:display_buffer
+
+import("//build/ohos.gni")
+
+_part = "drivers_peripheral_display"
+_subsystem = "hdf"
+
+_common_include_dirs = [
+  "include",
+  "src/display_gralloc",
+  "//drivers/peripheral/base",
+  "//drivers/peripheral/display/utils/include",
+  "//drivers/peripheral/display/buffer/hdi_service/include",
+  "//drivers/interface/display/buffer",
+  "//drivers/interface/display/composer/hdifd_parcelable",
+  "//foundation/communication/ipc/interfaces/innerkits/ipc_core/include",
+]
+
+_common_cflags = [
+  "-DGRALLOC_GBM_SUPPORT",
+  "-Wno-macro-redefined",
+]
+
+# Выбор DRM-устройства (общий с будущим composer VDI).
+ohos_static_library("oneir_drm_select") {
+  sources = [ "src/oneir_drm_select.cpp" ]
+  include_dirs = [ "include" ]
+  deps = [ "//third_party/libdrm:libdrm" ]
+  external_deps = [
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+  ]
+  part_name = _part
+  subsystem_name = _subsystem
+}
+
+# Мини-GBM поверх dumb buffers (из QEMU-реализации).
+ohos_static_library("oneir_higbm") {
+  sources = [ "src/display_gralloc/hi_gbm.cpp" ]
+  include_dirs = _common_include_dirs
+  cflags = _common_cflags
+  deps = [ "//third_party/libdrm:libdrm" ]
+  external_deps = [
+    "c_utils:utils",
+    "hilog:libhilog",
+  ]
+  part_name = _part
+  subsystem_name = _subsystem
+}
+
+ohos_shared_library("oneir_display_buffer_vendor") {
+  sources = [ "src/display_gralloc/display_gralloc_gbm.cpp" ]
+  include_dirs = _common_include_dirs
+  cflags = _common_cflags
+  output_name = "libdisplay_buffer_vendor"
+  deps = [
+    ":oneir_drm_select",
+    ":oneir_higbm",
+    "//third_party/libdrm:libdrm",
+  ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+  ]
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  innerapi_tags = [ "passthrough" ]
+  part_name = _part
+  subsystem_name = _subsystem
+}
+
+# Библиотека, которую загружает HDI-сервис через dlopen.
+ohos_shared_library("oneir_display_buffer_vdi_impl") {
+  sources = [ "src/display_gralloc/display_buffer_vdi_impl.cpp" ]
+  include_dirs = _common_include_dirs
+  cflags = _common_cflags
+  output_name = "libdisplay_buffer_vdi_impl"
+  deps = [
+    ":oneir_display_buffer_vendor",
+    ":oneir_drm_select",
+  ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+    "ipc:ipc_single",
+  ]
+  install_enable = true
+  install_images = [ chipset_base_dir ]
+  innerapi_tags = [ "passthrough" ]
+  part_name = _part
+  subsystem_name = _subsystem
+}
+
+group("display_buffer") {
+  deps = [
+    ":oneir_display_buffer_vdi_impl",
+    ":oneir_display_buffer_vendor",
+  ]
+}
