@@ -6,8 +6,9 @@
 
 import("//build/ohos.gni")
 
-_part = "drivers_peripheral_display"
-_subsystem = "hdf"
+# Собственный компонент (см. bundle.json): все зависимости объявлены там.
+_part = "oneir_display"
+_subsystem = "oneir"
 
 _common_include_dirs = [
   "include",
