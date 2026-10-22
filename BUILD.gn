@@ -105,6 +105,23 @@ ohos_shared_library("oneir_display_buffer_vdi_impl") {
   subsystem_name = _subsystem
 }
 
+ohos_executable("display_buffer_perf") {
+  testonly = true
+  sources = [ "perf/display_buffer_perf.cpp" ]
+  external_deps = [
+    "c_utils:utils",
+    "drivers_interface_display:display_buffer_idl_headers",
+    "drivers_interface_display:display_composer_idl_headers",
+    "drivers_interface_display:libdisplay_buffer_hdi_impl",
+    "hdf_core:libhdf_utils",
+    "hilog:libhilog",
+  ]
+  install_enable = false
+  part_name = "oneir_display"
+  subsystem_name = "oneir"
+}
+
+
 group("display_buffer") {
   deps = [
     ":oneir_display_buffer_vdi_impl",
