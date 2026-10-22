@@ -19,6 +19,12 @@ const char *OneirDrmDevicePath(void);
 /* Открывает выбранное устройство (O_RDWR | O_CLOEXEC). Владение fd у вызывающего. */
 int OneirOpenDrmDevice(void);
 
+/*
+ * Путь к файлу яркости подсветки: первый каталог в /sys/class/backlight
+ * (intel_backlight, acpi_video0, ...). Явно: переменная ONEIR_BACKLIGHT_PATH.
+ */
+const char *OneirBacklightPath(void);
+
 #ifdef __cplusplus
 }
 #endif
