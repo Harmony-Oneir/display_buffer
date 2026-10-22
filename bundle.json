@@ -35,7 +35,7 @@
       ],
       "inner_kits": [],
       "test": [
-        "//oneir/display_buffer/test:display_buffer_perf"
+        "//oneir/display_buffer/tests:display_buffer_perf"
       ]
     }
   }
