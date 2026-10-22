@@ -13,8 +13,8 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
-#define HDF_LOG_TAG oneir_drm_select
-#include "hdf_log.h"
+
+#include "display_log.h"
 
 namespace {
 constexpr int MAX_CARDS = 16;
@@ -46,7 +46,7 @@ void SelectDevice()
     const char *env = getenv("ONEIR_DRM_DEVICE");
     if (env != nullptr && env[0] != '\0') {
         g_path = env;
-        HDF_LOGI("drm device from ONEIR_DRM_DEVICE: %{public}s", g_path.c_str());
+        DISPLAY_LOGI("drm device from ONEIR_DRM_DEVICE: %{public}s", g_path.c_str());
         return;
     }
 
@@ -64,13 +64,13 @@ void SelectDevice()
         close(fd);
         if (connected) {
             g_path = path;
-            HDF_LOGI("drm device selected: %{public}s (has connected connector)", g_path.c_str());
+            DISPLAY_LOGI("drm device selected: %{public}s (has connected connector)", g_path.c_str());
             return;
         }
     }
 
     g_path = firstOpenable.empty() ? DEFAULT_PATH : firstOpenable;
-    HDF_LOGW("no drm device with connected connector, fallback: %{public}s", g_path.c_str());
+    DISPLAY_LOGW("no drm device with connected connector, fallback: %{public}s", g_path.c_str());
 }
 } // namespace
 
@@ -85,7 +85,7 @@ extern "C" int OneirOpenDrmDevice(void)
     const char *path = OneirDrmDevicePath();
     int fd = open(path, O_RDWR | O_CLOEXEC);
     if (fd < 0) {
-        HDF_LOGE("open %{public}s failed: %{public}s", path, strerror(errno));
+        DISPLAY_LOGE("open %{public}s failed: %{public}s", path, strerror(errno));
     }
     return fd;
 }
