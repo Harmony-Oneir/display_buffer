@@ -34,7 +34,26 @@
       "sub_component": [
         "//oneir/display_buffer:display_buffer"
       ],
-      "inner_kits": [],
+      "inner_kits": [
+        {
+          "name": "//oneir/display_buffer:oneir_drm_select",
+          "header": {
+            "header_files": [
+              "oneir_drm_select.h"
+            ],
+            "header_base": "//oneir/display_buffer/include"
+          }
+        },
+        {
+          "name": "//oneir/display_buffer:oneir_display_buffer_vdi_impl",
+          "header": {
+            "header_files": [
+              "display_buffer_vdi_impl.h"
+            ],
+            "header_base": "//oneir/display_buffer/src/display_gralloc"
+          }
+        }
+      ],
       "test": [
         "//oneir/display_buffer/tests:display_buffer_perf"
       ]
