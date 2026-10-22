@@ -435,7 +435,7 @@ int32_t GbmGrallocInitialize(void)
     GrallocManager *grallocManager = GetGrallocManager();
     DISPLAY_CHK_RETURN((grallocManager == nullptr), HDF_ERR_INVALID_PARAM, DISPLAY_LOGE("gralloc manager failed"); \
         GRALLOC_UNLOCK());
-    int ret = InitGbmDevice(g_drmFileNode, grallocManager);
+    int ret = InitGbmDevice(OneirDrmDevicePath(), grallocManager);
     DISPLAY_CHK_RETURN((ret != HDF_SUCCESS), ret, DISPLAY_LOGE("gralloc manager failed"); \
         GRALLOC_UNLOCK());
     grallocManager->referCount++;
