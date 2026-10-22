@@ -3,6 +3,7 @@
  */
 #include "oneir_drm_select.h"
 
+#include <dirent.h>
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
@@ -78,6 +79,41 @@ extern "C" const char *OneirDrmDevicePath(void)
 {
     std::call_once(g_selectOnce, SelectDevice);
     return g_path.c_str();
+}
+
+namespace {
+std::once_flag g_backlightOnce;
+std::string g_backlight;
+
+void SelectBacklight()
+{
+    const char *env = getenv("ONEIR_BACKLIGHT_PATH");
+    if (env != nullptr && env[0] != '\0') {
+        g_backlight = env;
+        return;
+    }
+    DIR *dir = opendir("/sys/class/backlight");
+    if (dir != nullptr) {
+        for (struct dirent *e = readdir(dir); e != nullptr; e = readdir(dir)) {
+            if (e->d_name[0] == '.') {
+                continue;
+            }
+            g_backlight = std::string("/sys/class/backlight/") + e->d_name + "/brightness";
+            break;
+        }
+        closedir(dir);
+    }
+    if (g_backlight.empty()) {
+        g_backlight = "/sys/class/backlight/backlight/brightness"; // как в исходной реализации
+    }
+    DISPLAY_LOGI("backlight: %{public}s", g_backlight.c_str());
+}
+} // namespace
+
+extern "C" const char *OneirBacklightPath(void)
+{
+    std::call_once(g_backlightOnce, SelectBacklight);
+    return g_backlight.c_str();
 }
 
 extern "C" int OneirOpenDrmDevice(void)
