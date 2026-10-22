@@ -72,7 +72,7 @@ ohos_shared_library("oneir_display_buffer_vendor") {
   ]
   install_enable = true
   install_images = [ chipset_base_dir ]
-  innerapi_tags = [ "passthrough" ]
+  #innerapi_tags = [ "passthrough" ]
   part_name = _part
   subsystem_name = _subsystem
 }
@@ -97,7 +97,7 @@ ohos_shared_library("oneir_display_buffer_vdi_impl") {
   ]
   install_enable = true
   install_images = [ chipset_base_dir ]
-  innerapi_tags = [ "passthrough" ]
+  #innerapi_tags = [ "passthrough" ]
   part_name = _part
   subsystem_name = _subsystem
 }
