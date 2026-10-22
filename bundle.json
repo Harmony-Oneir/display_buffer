@@ -21,6 +21,7 @@
       "components": [
         "c_utils",
         "drivers_interface_display",
+        "graphic_surface",
         "hdf_core",
         "hilog",
         "ipc"
