@@ -29,7 +29,10 @@ _common_cflags = [
 # Выбор DRM-устройства (общий с будущим composer VDI).
 ohos_static_library("oneir_drm_select") {
   sources = [ "src/oneir_drm_select.cpp" ]
-  include_dirs = [ "include" ]
+  include_dirs = [ 
+    "include",
+    "//drivers/peripheral/display/utils/include",
+  ]
   deps = [ "//third_party/libdrm:libdrm" ]
   external_deps = [
     "hdf_core:libhdf_utils",
