@@ -8,6 +8,7 @@ import("//build/ohos.gni")
 ohos_executable("display_buffer_perf") {
   testonly = true
   sources = [ "perf/display_buffer_perf.cpp" ]
+  include_dirs = [ "//drivers/interface/display/composer/hdifd_parcelable" ]
   external_deps = [
     "c_utils:utils",
     "drivers_interface_display:display_buffer_idl_headers",
