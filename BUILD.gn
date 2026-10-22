@@ -26,6 +26,19 @@ _common_cflags = [
   "-Wno-macro-redefined",
 ]
 
+# Заголовки, которые видят потребители (композитор).
+config("oneir_drm_select_public") {
+  include_dirs = [ "include" ]
+}
+
+config("oneir_display_buffer_public") {
+  include_dirs = [
+    "include",
+    "src/display_gralloc",
+    "//drivers/peripheral/display/buffer/hdi_service/include",
+  ]
+}
+
 # Выбор DRM-устройства (общий с будущим composer VDI).
 ohos_static_library("oneir_drm_select") {
   sources = [ "src/oneir_drm_select.cpp" ]
